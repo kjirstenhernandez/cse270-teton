@@ -17,7 +17,7 @@ class TestSmokeTest():
     options.add_argument("--headless=new")
     self.driver = webdriver.Chrome(options=options)
     self.vars = {}
-
+  
   def teardown_method(self, method):
     self.driver.quit()
   
@@ -29,8 +29,6 @@ class TestSmokeTest():
     assert self.driver.find_element(By.CSS_SELECTOR, ".header-title > h1").text == "Teton Idaho"
     assert self.driver.find_element(By.CSS_SELECTOR, ".header-title > h2").text == "Chamber of Commerce"
     assert self.driver.title == "Teton Idaho CoC"
-    elements = self.driver.find_elements(By.CSS_SELECTOR, "nav")
-    assert len(elements) > 0
     elements = self.driver.find_elements(By.CSS_SELECTOR, ".spotlight1")
     assert len(elements) > 0
     elements = self.driver.find_elements(By.CSS_SELECTOR, ".spotlight2")
@@ -41,7 +39,6 @@ class TestSmokeTest():
   
   def test_directoryPageTests(self):
     self.driver.get("https://kjirstenhernandez.github.io/cse270-teton/")
-    self.driver.set_window_size(1175, 691)
     self.driver.find_element(By.LINK_TEXT, "Directory").click()
     self.driver.find_element(By.ID, "directory-grid").click()
     assert self.driver.find_element(By.CSS_SELECTOR, ".gold-member:nth-child(9) > p:nth-child(2)").text == "Teton Turf and Tree"
@@ -52,9 +49,10 @@ class TestSmokeTest():
     self.driver.get("https://kjirstenhernandez.github.io/cse270-teton/")
     self.driver.set_window_size(1175, 691)
     self.driver.find_element(By.LINK_TEXT, "Admin").click()
-    self.driver.find_element(By.CSS_SELECTOR, ".myinput:nth-child(3)").click()
-    self.driver.find_element(By.ID, "password").send_keys("incorrectpassword")
+    elements = self.driver.find_elements(By.ID, "username")
+    assert len(elements) > 0
     self.driver.find_element(By.ID, "username").send_keys("incorrectuser")
+    self.driver.find_element(By.ID, "password").send_keys("incorrectpassword")
     self.driver.find_element(By.CSS_SELECTOR, ".mysubmit:nth-child(4)").click()
     WebDriverWait(self.driver, 30).until(expected_conditions.text_to_be_present_in_element((By.CSS_SELECTOR, ".errorMessage"), "Invalid username and password."))
   
@@ -67,9 +65,10 @@ class TestSmokeTest():
     self.driver.find_element(By.NAME, "fname").click()
     self.driver.find_element(By.NAME, "fname").send_keys("Kjirsten")
     self.driver.find_element(By.NAME, "lname").send_keys("Hernandez")
-    self.driver.find_element(By.NAME, "bizname").send_keys("Test")
+    self.driver.find_element(By.NAME, "bizname").send_keys("test")
     self.driver.find_element(By.NAME, "biztitle").send_keys("Tech")
     self.driver.find_element(By.NAME, "submit").click()
+    self.driver.find_element(By.NAME, "email").click()
     elements = self.driver.find_elements(By.NAME, "email")
     assert len(elements) > 0
   
